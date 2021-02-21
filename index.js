@@ -1,37 +1,22 @@
 const accordionButtons = document.querySelectorAll('.accordion__button');
-const accordionArrows = document.querySelectorAll('.accordion__arrow');
-const accordionExpanded = document.querySelectorAll('.accordion__expanded');
+const accordionContent = document.querySelectorAll('.accordion__expanded');
 
-function expandAccordion(e) {
-  // remove open classes from all items
-  accordionArrows.forEach(arrow => arrow.classList.remove('open-arrow'));
-  accordionExpanded.forEach(expand => expand.classList.remove('open'));
-  console.log('remove')
-  // identify which item was clicked
+function expandContent(e) {
+  // identify the item in the accordion that was clicked on
   const expandItemNumber = e.target.dataset.key;
-  const arrow = document.querySelector(`img[data-key="${expandItemNumber}"]`);
-  const expandContent = document.querySelector(`div[data-key="${expandItemNumber}"]`);
-  // open the corresponding item
-  arrow.classList.toggle('open-arrow')
-  expandContent.classList.toggle('open');
-  console.log('open');
+  // identify the corresponding button
+  const selectedButton = document.querySelector(`button[data-key="${expandItemNumber}"]`);
+  // identify the corresponding expanded content
+  const selectedContent = document.querySelector(`div[data-key="${expandItemNumber}"]`);
+  // remove the selected item from the list of buttons and content
+  const unselectedButtons = [...accordionButtons].filter(button => button.dataset.key !== expandItemNumber);
+  const unselectedContent = [...accordionContent].filter(content => content.dataset.key !== expandItemNumber);
+  // remove the open class from the buttons and content 
+  unselectedButtons.forEach(button => button.classList.remove('open'));
+  unselectedContent.forEach(content => content.classList.remove('open'));
+  // open the selected one
+  selectedButton.classList.toggle('open');
+  selectedContent.classList.toggle('open');
 }
 
-function flipArrows(e) {
-  // identify the one that's clicked on
-  const expandItemNumber = e.target.dataset.key;
-  const arrow = document.querySelector(`img[data-key="${expandItemNumber}"]`);
-  const expandContent = document.querySelector(`div[data-key="${expandItemNumber}"]`);
-  
-  // filter this one out and remove open classes from the other ones
-  const unselectedArrows = [...accordionArrows].filter(arrow => arrow.dataset.key !== expandItemNumber);
-  unselectedArrows.forEach(arrow => arrow.classList.remove('open-arrow'));
-  const unselectedContent = [...accordionExpanded].filter(arrow => arrow.dataset.key !== expandItemNumber);
-  unselectedContent.forEach(arrow => arrow.classList.remove('open'));
-  
-  // toggle the one that was clicked on
-  arrow.classList.toggle('open-arrow');
-  expandContent.classList.toggle('open');
-}
-
-accordionButtons.forEach(button => button.addEventListener('click', flipArrows));
+accordionButtons.forEach(button => button.addEventListener('click', expandContent));
